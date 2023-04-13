@@ -2,14 +2,12 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiResource;
 use App\Repository\StateRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: StateRepository::class)]
-#[ApiResource]
 class State
 {
     #[ORM\Id]
@@ -18,7 +16,7 @@ class State
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $status = null;
+    private ?string $name = null;
 
     #[ORM\OneToMany(mappedBy: 'state', targetEntity: Post::class)]
     private Collection $posts;
@@ -33,14 +31,14 @@ class State
         return $this->id;
     }
 
-    public function getStatus(): ?string
+    public function getName(): ?string
     {
-        return $this->status;
+        return $this->name;
     }
 
-    public function setStatus(string $status): self
+    public function setName(string $name): self
     {
-        $this->status = $status;
+        $this->name = $name;
 
         return $this;
     }

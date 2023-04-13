@@ -10,7 +10,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PostRepository::class)]
-#[ApiResource]
+#[ApiResource()]
 class Post
 {
     #[ORM\Id]
@@ -21,25 +21,28 @@ class Post
     #[ORM\Column(length: 255)]
     private ?string $title = null;
 
-    #[ORM\Column(length: 5000)]
-    private ?string $description = null;
+    #[ORM\Column(type: Types::TEXT)]
+    private ?string $content = null;
+
+    #[ORM\ManyToOne(inversedBy: 'posts')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?State $state = null;
 
     #[ORM\ManyToMany(targetEntity: Tag::class, inversedBy: 'posts')]
     private Collection $tags;
 
-
     #[ORM\ManyToOne(inversedBy: 'posts')]
-    private ?State $state = null;
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $userId = null;
+
+    #[ORM\Column]
+    private ?\DateTimeImmutable $cratedAt = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $slug = null;
 
     #[ORM\OneToMany(mappedBy: 'post', targetEntity: Answer::class, orphanRemoval: true)]
     private Collection $answers;
-
-    #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?\DateTimeInterface $creationDate = null;
-
-    #[ORM\ManyToOne(inversedBy: 'posts')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?User $user = null;
 
     public function __construct()
     {
@@ -64,14 +67,26 @@ class Post
         return $this;
     }
 
-    public function getDescription(): ?string
+    public function getContent(): ?string
     {
-        return $this->description;
+        return $this->content;
     }
 
-    public function setDescription(string $description): self
+    public function setContent(string $content): self
     {
-        $this->description = $description;
+        $this->content = $content;
+
+        return $this;
+    }
+
+    public function getState(): ?State
+    {
+        return $this->state;
+    }
+
+    public function setState(?State $state): self
+    {
+        $this->state = $state;
 
         return $this;
     }
@@ -100,16 +115,38 @@ class Post
         return $this;
     }
 
-
-
-    public function getState(): ?State
+    public function getUserId(): ?User
     {
-        return $this->state;
+        return $this->userId;
     }
 
-    public function setState(?State $state): self
+    public function setUserId(?User $userId): self
     {
-        $this->state = $state;
+        $this->userId = $userId;
+
+        return $this;
+    }
+
+    public function getCratedAt(): ?\DateTimeImmutable
+    {
+        return $this->cratedAt;
+    }
+
+    public function setCratedAt(\DateTimeImmutable $cratedAt): self
+    {
+        $this->cratedAt = $cratedAt;
+
+        return $this;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(string $slug): self
+    {
+        $this->slug = $slug;
 
         return $this;
     }
@@ -140,30 +177,6 @@ class Post
                 $answer->setPost(null);
             }
         }
-
-        return $this;
-    }
-
-    public function getCreationDate(): ?\DateTimeInterface
-    {
-        return $this->creationDate;
-    }
-
-    public function setCreationDate(\DateTimeInterface $creationDate): self
-    {
-        $this->creationDate = $creationDate;
-
-        return $this;
-    }
-
-    public function getUser(): ?User
-    {
-        return $this->user;
-    }
-
-    public function setUser(?User $user): self
-    {
-        $this->user = $user;
 
         return $this;
     }

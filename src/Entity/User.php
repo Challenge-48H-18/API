@@ -7,52 +7,43 @@ use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Annotation\Groups;
-use ApiPlatform\Metadata\Get;
-use ApiPlatform\Metadata\GetCollection;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[ApiResource(
-    normalizationContext: ['groups' => ['read']],
-    denormalizationContext: ['groups' => ['write']],
-)]
+#[ORM\Table(name: '`user`')]
+#[ApiResource()]
 class User
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups("read")]
     private ?int $id = null;
-    #[Groups("read")]
+
     #[ORM\Column(length: 255)]
     private ?string $name = null;
-    #[Groups("read")]
+
     #[ORM\Column(length: 255)]
     private ?string $password = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $role = null;
 
-    #[Groups("read")]
     #[ORM\ManyToOne(inversedBy: 'users')]
-    #[ORM\JoinColumn(nullable: false)]
     private ?Niveau $niveau = null;
-    #[Groups("read")]
+
     #[ORM\ManyToMany(targetEntity: Tag::class, inversedBy: 'users')]
     private Collection $tags;
-    #[Groups("read")]
-    #[ORM\ManyToOne(inversedBy: 'user')]
-    private ?Post $post = null;
-    #[Groups("read")]
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Answer::class, orphanRemoval: true)]
-    private Collection $answers;
 
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Post::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'userId', targetEntity: Post::class, orphanRemoval: true)]
     private Collection $posts;
+
+    #[ORM\OneToMany(mappedBy: 'userID', targetEntity: Answer::class, orphanRemoval: true)]
+    private Collection $answers;
 
     public function __construct()
     {
         $this->tags = new ArrayCollection();
-        $this->answers = new ArrayCollection();
         $this->posts = new ArrayCollection();
+        $this->answers = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -84,7 +75,17 @@ class User
         return $this;
     }
 
+    public function getRole(): ?string
+    {
+        return $this->role;
+    }
 
+    public function setRole(string $role): self
+    {
+        $this->role = $role;
+
+        return $this;
+    }
 
     public function getNiveau(): ?Niveau
     {
@@ -122,14 +123,32 @@ class User
         return $this;
     }
 
-    public function getPost(): ?Post
+    /**
+     * @return Collection<int, Post>
+     */
+    public function getPosts(): Collection
     {
-        return $this->post;
+        return $this->posts;
     }
 
-    public function setPost(?Post $post): self
+    public function addPost(Post $post): self
     {
-        $this->post = $post;
+        if (!$this->posts->contains($post)) {
+            $this->posts->add($post);
+            $post->setUserId($this);
+        }
+
+        return $this;
+    }
+
+    public function removePost(Post $post): self
+    {
+        if ($this->posts->removeElement($post)) {
+            // set the owning side to null (unless already changed)
+            if ($post->getUserId() === $this) {
+                $post->setUserId(null);
+            }
+        }
 
         return $this;
     }
@@ -146,7 +165,7 @@ class User
     {
         if (!$this->answers->contains($answer)) {
             $this->answers->add($answer);
-            $answer->setUser($this);
+            $answer->setUserID($this);
         }
 
         return $this;
@@ -156,38 +175,8 @@ class User
     {
         if ($this->answers->removeElement($answer)) {
             // set the owning side to null (unless already changed)
-            if ($answer->getUser() === $this) {
-                $answer->setUser(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Post>
-     */
-    public function getPosts(): Collection
-    {
-        return $this->posts;
-    }
-
-    public function addPost(Post $post): self
-    {
-        if (!$this->posts->contains($post)) {
-            $this->posts->add($post);
-            $post->setUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removePost(Post $post): self
-    {
-        if ($this->posts->removeElement($post)) {
-            // set the owning side to null (unless already changed)
-            if ($post->getUser() === $this) {
-                $post->setUser(null);
+            if ($answer->getUserID() === $this) {
+                $answer->setUserID(null);
             }
         }
 
