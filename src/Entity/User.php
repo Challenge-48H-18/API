@@ -7,30 +7,39 @@ use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
-#[ApiResource()]
+#[ApiResource(
+    normalizationContext: ['groups'=>['read:collection']]
+)]
 class User
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['read:collection'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['read:collection'])]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['read:collection'])]
     private ?string $password = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['read:collection'])]
     private ?string $role = null;
 
     #[ORM\ManyToOne(inversedBy: 'users')]
+    #[Groups(['read:collection'])]
     private ?Niveau $niveau = null;
 
     #[ORM\ManyToMany(targetEntity: Tag::class, inversedBy: 'users')]
+    #[Groups(['read:collection'])]
     private Collection $tags;
 
     #[ORM\OneToMany(mappedBy: 'userId', targetEntity: Post::class, orphanRemoval: true)]
@@ -38,6 +47,9 @@ class User
 
     #[ORM\OneToMany(mappedBy: 'userID', targetEntity: Answer::class, orphanRemoval: true)]
     private Collection $answers;
+
+    #[ORM\Column]
+    private ?int $point = null;
 
     public function __construct()
     {
@@ -179,6 +191,18 @@ class User
                 $answer->setUserID(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPoint(): ?int
+    {
+        return $this->point;
+    }
+
+    public function setPoint(int $point): self
+    {
+        $this->point = $point;
 
         return $this;
     }
