@@ -6,6 +6,7 @@ use ApiPlatform\Metadata\ApiResource;
 use App\Repository\PostRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PostRepository::class)]
@@ -26,8 +27,6 @@ class Post
     #[ORM\ManyToMany(targetEntity: Tag::class, inversedBy: 'posts')]
     private Collection $tags;
 
-    #[ORM\OneToMany(mappedBy: 'post', targetEntity: User::class)]
-    private Collection $user;
 
     #[ORM\ManyToOne(inversedBy: 'posts')]
     private ?State $state = null;
@@ -35,10 +34,16 @@ class Post
     #[ORM\OneToMany(mappedBy: 'post', targetEntity: Answer::class, orphanRemoval: true)]
     private Collection $answers;
 
+    #[ORM\Column(type: Types::DATE_MUTABLE)]
+    private ?\DateTimeInterface $creationDate = null;
+
+    #[ORM\ManyToOne(inversedBy: 'posts')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $user = null;
+
     public function __construct()
     {
         $this->tags = new ArrayCollection();
-        $this->user = new ArrayCollection();
         $this->answers = new ArrayCollection();
     }
 
@@ -95,35 +100,7 @@ class Post
         return $this;
     }
 
-    /**
-     * @return Collection<int, User>
-     */
-    public function getUser(): Collection
-    {
-        return $this->user;
-    }
 
-    public function addUser(User $user): self
-    {
-        if (!$this->user->contains($user)) {
-            $this->user->add($user);
-            $user->setPost($this);
-        }
-
-        return $this;
-    }
-
-    public function removeUser(User $user): self
-    {
-        if ($this->user->removeElement($user)) {
-            // set the owning side to null (unless already changed)
-            if ($user->getPost() === $this) {
-                $user->setPost(null);
-            }
-        }
-
-        return $this;
-    }
 
     public function getState(): ?State
     {
@@ -163,6 +140,30 @@ class Post
                 $answer->setPost(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCreationDate(): ?\DateTimeInterface
+    {
+        return $this->creationDate;
+    }
+
+    public function setCreationDate(\DateTimeInterface $creationDate): self
+    {
+        $this->creationDate = $creationDate;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }

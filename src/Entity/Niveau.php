@@ -7,9 +7,13 @@ use App\Repository\NiveauRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: NiveauRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    normalizationContext: ['groups' => ['read']],
+    denormalizationContext: ['groups' => ['write']],
+)]
 class Niveau
 {
     #[ORM\Id]
@@ -17,6 +21,7 @@ class Niveau
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Groups(['read','write'])]
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
