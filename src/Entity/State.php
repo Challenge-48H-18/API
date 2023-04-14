@@ -3,29 +3,39 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
 use App\Repository\StateRepository;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post as PostMeta;
+use ApiPlatform\Metadata\Put;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: StateRepository::class)]
-#[ApiResource(
-    normalizationContext: ['groups'=>['read:collection']]
+#[GetCollection(
+    normalizationContext: ['groups'=>['read:State:Collection']],
 )]
+#[Get(normalizationContext:['groupes'=>['read:State:Unique',"read:State:Collection"]])]
+#[Put()]
+#[Delete()]
+#[PostMeta()]
 class State
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['read:collection'])]
+    #[Groups(['read:State:Collection'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['read:collection'])]
+    #[Groups(['read:State:Collection','read:Post:Collection','read:User:Unique'])]
     private ?string $name = null;
 
     #[ORM\OneToMany(mappedBy: 'state', targetEntity: Post::class)]
+    #[Groups(['read:State:Unique'])]
     private Collection $posts;
 
     public function __construct()

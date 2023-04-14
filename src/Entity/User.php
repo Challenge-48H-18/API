@@ -4,6 +4,11 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\UserRepository;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post as PostMeta;
+use ApiPlatform\Metadata\Put;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -11,43 +16,50 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
-#[ApiResource(
-    normalizationContext: ['groups'=>['read:collection']]
+#[GetCollection(
+    normalizationContext: ['groups'=>['read:User:Collection']],
 )]
+#[Get(normalizationContext:['groupes'=>['read:User:Unique',"read:User:Collection"]])]
+#[Put()]
+#[Delete()]
+#[PostMeta()]
 class User
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['read:collection'])]
+    #[Groups(['read:User:Collection','read:Post:Collection'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['read:collection'])]
+    #[Groups(['read:User:Collection','read:Post:Collection'])]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['read:collection'])]
+    #[Groups(['read:User:Collection'])]
     private ?string $password = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['read:collection'])]
+    #[Groups(['read:User:Collection'])]
     private ?string $role = null;
 
     #[ORM\ManyToOne(inversedBy: 'users')]
-    #[Groups(['read:collection'])]
+    #[Groups(['read:User:Collection','read:Post:Collection'])]
     private ?Niveau $niveau = null;
 
     #[ORM\ManyToMany(targetEntity: Tag::class, inversedBy: 'users')]
-    #[Groups(['read:collection'])]
+    #[Groups(['read:User:Unique'])]
     private Collection $tags;
 
     #[ORM\OneToMany(mappedBy: 'userId', targetEntity: Post::class, orphanRemoval: true)]
+    #[Groups(['read:User:Unique'])]
     private Collection $posts;
 
     #[ORM\OneToMany(mappedBy: 'userID', targetEntity: Answer::class, orphanRemoval: true)]
+    #[Groups(['read:User:Unique'])]
     private Collection $answers;
 
+    #[Groups(['read:User:Collection'])]
     #[ORM\Column]
     private ?int $point = null;
 

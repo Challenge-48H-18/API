@@ -3,52 +3,53 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\Delete;
-use ApiPlatform\Metadata\Get;
-use ApiPlatform\Metadata\GetCollection;
-use ApiPlatform\Metadata\Post as PostMeta;
-use ApiPlatform\Metadata\Put;
+
 use App\Repository\PostRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post as PostMeta;
+use ApiPlatform\Metadata\Put;
 
-#[ORM\Entity(repositoryClass: PostRepository::class)]
 #[GetCollection(
-    normalizationContext: ['groups'=>['read:collection']],
+    normalizationContext: ['groups'=>['read:Post:Collection']],
 )]
-#[Get(normalizationContext:['groupes'=>['read:unique',"read:collection"]])]
+#[Get(normalizationContext:['groupes'=>['read:Post:Unique',"read:Post:Collection"]])]
 #[Put()]
 #[Delete()]
 #[PostMeta()]
+#[ORM\Entity(repositoryClass: PostRepository::class)]
 class Post
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['read:collection'])]
+    #[Groups(['read:Post:Collection'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['read:collection'])]
+    #[Groups(['read:Post:Collection'])]
     private ?string $title = null;
 
-    #[Groups(['read:collection'])]
+    #[Groups(['read:Post:Collection'])]
     #[ORM\Column(type: Types::TEXT)]
     private ?string $content = null;
 
-    #[Groups(['read:collection'])]
+    #[Groups(['read:Post:Collection'])]
     #[ORM\ManyToOne(inversedBy: 'posts')]
     #[ORM\JoinColumn(nullable: false)]
     private ?State $state = null;
 
-    #[Groups(['read:collection'])]
+    #[Groups(['read:Post:Collection'])]
     #[ORM\ManyToMany(targetEntity: Tag::class, inversedBy: 'posts')]
     private Collection $tags;
 
-    #[Groups(['read:collection'])]
+    #[Groups(['read:Post:Collection'])]
     #[ORM\ManyToOne(inversedBy: 'posts')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $userId = null;
@@ -56,11 +57,11 @@ class Post
     #[ORM\Column]
     private ?\DateTimeImmutable $cratedAt = null;
 
-    #[Groups(['read:collection'])]
+    #[Groups(['read:Post:Collection'])]
     #[ORM\Column(length: 255)]
     private ?string $slug = null;
 
-    #[Groups(['read:unique'])]
+    #[Groups(['read:Post:Unique'])]
     #[ORM\OneToMany(mappedBy: 'post', targetEntity: Answer::class, orphanRemoval: true)]
     private Collection $answers;
 

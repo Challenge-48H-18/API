@@ -8,26 +8,37 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post as PostMeta;
+use ApiPlatform\Metadata\Put;
 
-#[ORM\Entity(repositoryClass: TagRepository::class)]
-#[ApiResource(
-    normalizationContext: ['groups'=>['read:collection']]
+#[GetCollection(
+    normalizationContext: ['groups'=>['read:Tag:Collection']],
 )]
+#[Get(normalizationContext:['groupes'=>['read:Tag:Unique',"read:Tag:Collection"]])]
+#[Put()]
+#[Delete()]
+#[PostMeta()]
+#[ORM\Entity(repositoryClass: TagRepository::class)]
 class Tag
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['read:collection'])]
+    #[Groups(['read:Tag:Collection'])]
     private ?int $id = null;
 
-    #[Groups(['read:collection'])]
+    #[Groups(['read:Tag:Collection','read:Post:Collection'])]
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
+    #[Groups(['read:Tag:Unique'])]
     #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'tags')]
     private Collection $users;
-
+    
+    #[Groups(['read:Tag:Unique'])]
     #[ORM\ManyToMany(targetEntity: Post::class, mappedBy: 'tags')]
     private Collection $posts;
 

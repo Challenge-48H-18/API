@@ -8,23 +8,33 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post as PostMeta;
+use ApiPlatform\Metadata\Put;
 
-#[ORM\Entity(repositoryClass: NiveauRepository::class)]
-#[ApiResource(
-    normalizationContext: ['groups'=>['read:collection']]
+#[GetCollection(
+    normalizationContext: ['groups'=>['read:Niveau:Collection']],
 )]
+#[Get(normalizationContext:['groupes'=>['read:Niveau:Unique',"read:Niveau:Collection"]])]
+#[Put()]
+#[Delete()]
+#[PostMeta()]
+#[ORM\Entity(repositoryClass: NiveauRepository::class)]
 class Niveau
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['read:collection'])]
+    #[Groups(['read:Niveau:Collection'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['read:collection'])]
+    #[Groups(['read:Niveau:Collection','read:Post:Collection'])]
     private ?string $name = null;
 
+    #[Groups(['read:Niveau:Unique'])]
     #[ORM\OneToMany(mappedBy: 'niveau', targetEntity: User::class)]
     private Collection $users;
 
