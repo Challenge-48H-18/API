@@ -27,7 +27,9 @@ use DateTimeImmutable;
     )]
 #[Get(
     normalizationContext:['groups'=>['read:Post:Unique','read:Post:Collection']])]
-#[Put()]
+#[Put(
+    denormalizationContext:['groups'=>['put:Post']]
+)]
 #[Delete()]
 #[PostMeta()]
 #[ORM\Entity(repositoryClass: PostRepository::class)]
@@ -47,7 +49,7 @@ class Post
     #[ORM\Column(type: Types::TEXT)]
     private ?string $content = null;
 
-    #[Groups(['read:Post:Collection','read:State:Unique'])]
+    #[Groups(['read:Post:Collection','read:State:Unique','put:Post'])]
     #[ORM\ManyToOne(inversedBy: 'posts')]
     #[ORM\JoinColumn(nullable: false)]
     private ?State $state = null;
