@@ -18,9 +18,6 @@ use ApiPlatform\Metadata\Put;
     normalizationContext: ['groups'=>['read:Tag:Collection']],
 )]
 #[Get(normalizationContext:['groupes'=>['read:Tag:Unique',"read:Tag:Collection"]])]
-#[Put()]
-#[Delete()]
-#[PostMeta()]
 #[ORM\Entity(repositoryClass: TagRepository::class)]
 class Tag
 {
@@ -37,7 +34,7 @@ class Tag
     #[Groups(['read:Tag:Unique'])]
     #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'tags')]
     private Collection $users;
-    
+
     #[Groups(['read:Tag:Unique'])]
     #[ORM\ManyToMany(targetEntity: Post::class, mappedBy: 'tags')]
     private Collection $posts;

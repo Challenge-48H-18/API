@@ -19,9 +19,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
     normalizationContext: ['groups'=>['read:State:Collection']],
 )]
 #[Get(normalizationContext:['groupes'=>['read:State:Unique',"read:State:Collection"]])]
-#[Put()]
-#[Delete()]
-#[PostMeta()]
 class State
 {
     #[ORM\Id]
