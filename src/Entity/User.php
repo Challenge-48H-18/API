@@ -39,6 +39,9 @@ class User
     #[ORM\OneToMany(mappedBy: 'userID', targetEntity: Answer::class, orphanRemoval: true)]
     private Collection $answers;
 
+    #[ORM\Column]
+    private ?int $point = null;
+
     public function __construct()
     {
         $this->tags = new ArrayCollection();
@@ -179,6 +182,18 @@ class User
                 $answer->setUserID(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPoint(): ?int
+    {
+        return $this->point;
+    }
+
+    public function setPoint(int $point): self
+    {
+        $this->point = $point;
 
         return $this;
     }

@@ -8,6 +8,7 @@ use App\Entity\Tag;
 use App\Entity\Niveau;
 use App\Entity\User;
 use App\Entity\Post;
+use App\Entity\Answer;
 use App\Entity\State;
 use DateTimeImmutable;
 
@@ -55,6 +56,7 @@ class AppFixtures extends Fixture
         $users[$i]->setNiveau($niveaux[array_rand($niveaux)]);
         $users[$i]->setName($faker->firstName());
         $users[$i]->setPassword($faker->password(6,20));
+        $users[$i]->setPoint(0);
         $users[$i]->addTag($tags[array_rand($tags)]);
         $users[$i]->setRole($roleList[array_rand($roleList)]);
         $manager->persist($users[$i]);
@@ -63,18 +65,28 @@ class AppFixtures extends Fixture
         for ($i = 0; $i < 123;$i++){
             $posts[$i]= new Post();
             $posts[$i]->setState($states[array_rand($states)]);
-            $posts[$i]->setTitle('test');
-            $posts[$i]->setContent('Fuck la team');
+            $jobTitle = $faker->jobTitle();
+            $posts[$i]->setTitle($jobTitle);
+            $posts[$i]->setContent($faker->paragraph());
             $posts[$i]->addTag($tags[array_rand($tags)]);
             $posts[$i]->setUserId($users[array_rand($users)]);
             $posts[$i]->setCratedAt(new DateTimeImmutable());
+            $posts[$i]->setSlug("l");
             $manager->persist($posts[$i]);
         }
 
 
+        $answer = array();
+        for ($i = 0; $i < 246;$i++){
+            $answer[$i]= new Answer();
+            $answer[$i]->setContent($faker->paragraph());
+            $answer[$i]->setUserId($users[array_rand($users)]);
+            $answer[$i]->setCreatedAt(new DateTimeImmutable());
+            $answer[$i]->setPost($posts[array_rand($posts)]);
+            $manager->persist($answer[$i]);
+        }
 
-
-    $manager->flush();
+$manager->flush();
     
 
         // $faker = Faker\Factory::create();
