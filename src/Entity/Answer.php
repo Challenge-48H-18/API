@@ -3,12 +3,15 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Post as PostMeta;
 use App\Repository\AnswerRepository;
+use DateTimeImmutable;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: AnswerRepository::class)]
+#[PostMeta()]
 class Answer
 {
     #[ORM\Id]
@@ -33,6 +36,11 @@ class Answer
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['read:Post:Unique'])]
     private ?User $userID = null;
+
+    public function __construct()
+    {   
+        $this->createdAt = new DateTimeImmutable();
+    }
 
     public function getId(): ?int
     {

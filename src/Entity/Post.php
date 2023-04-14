@@ -193,7 +193,7 @@ class Post
     {
         if (!$this->answers->contains($answer)) {
             $this->answers->add($answer);
-            $answer->setPost($this);
+
         }
 
         return $this;
