@@ -16,6 +16,7 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post as PostMeta;
 use ApiPlatform\Metadata\Put;
 use DateTime;
+use DateTimeImmutable;
 
 #[GetCollection(
     normalizationContext: ['groups'=>['read:Post:Collection']],
@@ -70,7 +71,7 @@ class Post
     {
         $this->tags = new ArrayCollection();
         $this->answers = new ArrayCollection();
-        $this->cratedAt = new DateTime();
+        $this->cratedAt = new DateTimeImmutable();
     }
 
     public function getId(): ?int
