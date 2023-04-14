@@ -15,8 +15,13 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post as PostMeta;
 use ApiPlatform\Metadata\Put;
+use App\Repository\StateRepository;
 use DateTime;
 use DateTimeImmutable;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Event\LifecycleEventArgs as EventLifecycleEventArgs;
+use Doctrine\Persistence\Event\LifecycleEventArgs;
 
 #[GetCollection(
     normalizationContext: ['groups'=>['read:Post:Collection']],
@@ -68,7 +73,7 @@ class Post
     private Collection $answers;
 
     public function __construct()
-    {
+    {   
         $this->tags = new ArrayCollection();
         $this->answers = new ArrayCollection();
         $this->cratedAt = new DateTimeImmutable();

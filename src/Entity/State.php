@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use App\Repository\StateRepository;
@@ -24,16 +25,18 @@ class State
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[ApiProperty(identifier: false)]
     #[Groups(['read:State:Collection'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[ApiProperty(identifier: true)]
     #[Groups(['read:State:Collection','read:Post:Collection','read:User:Unique'])]
     private ?string $name = null;
 
     #[ORM\OneToMany(mappedBy: 'state', targetEntity: Post::class)]
     #[Groups(['read:State:Unique'])]
-    private Collection $posts;
+    private Collection $posts;  
 
     public function __construct()
     {
