@@ -22,9 +22,10 @@ use DateTimeImmutable;
 
 #[GetCollection(
     normalizationContext: ['groups'=>['read:Post:Collection']],
+    paginationEnabled:false
 )]
-#[ApiResource(paginationEnabled: false)]
-#[Get(normalizationContext:['groups'=>['read:Post:Unique','read:Post:Collection']])]
+#[Get(
+    normalizationContext:['groups'=>['read:Post:Unique','read:Post:Collection']])]
 #[Put()]
 #[Delete()]
 #[PostMeta()]
