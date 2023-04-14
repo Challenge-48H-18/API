@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\TagRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -24,9 +25,11 @@ class Tag
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[ApiProperty(identifier: false)]
     #[Groups(['read:Tag:Collection'])]
     private ?int $id = null;
 
+    #[ApiProperty(identifier: true)]
     #[Groups(['read:Tag:Collection','read:Post:Collection'])]
     #[ORM\Column(length: 255)]
     private ?string $name = null;

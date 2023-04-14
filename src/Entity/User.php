@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\UserRepository;
 use ApiPlatform\Metadata\Delete;
@@ -31,6 +32,7 @@ class User
     #[Groups(['read:User:Collection','read:Post:Collection'])]
     private ?int $id = null;
 
+    #[ApiProperty(identifier: true)]
     #[ORM\Column(length: 255)]
     #[Groups(['read:User:Collection','read:Post:Collection'])]
     private ?string $name = null;

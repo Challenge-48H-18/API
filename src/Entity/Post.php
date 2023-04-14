@@ -15,6 +15,7 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post as PostMeta;
 use ApiPlatform\Metadata\Put;
+use DateTime;
 
 #[GetCollection(
     normalizationContext: ['groups'=>['read:Post:Collection']],
@@ -69,6 +70,7 @@ class Post
     {
         $this->tags = new ArrayCollection();
         $this->answers = new ArrayCollection();
+        $this->cratedAt = new DateTime();
     }
 
     public function getId(): ?int
