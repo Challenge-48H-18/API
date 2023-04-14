@@ -30,7 +30,7 @@ class Tag
     private ?int $id = null;
 
     #[ApiProperty(identifier: true)]
-    #[Groups(['read:Tag:Collection','read:Post:Collection'])]
+    #[Groups(['read:Tag:Collection','read:Post:Collection','read:State:Unique'])]
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 

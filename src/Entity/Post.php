@@ -35,14 +35,14 @@ class Post
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['read:Post:Collection'])]
+    #[Groups(['read:Post:Collection','read:State:Unique'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['read:Post:Collection'])]
+    #[Groups(['read:Post:Collection','read:State:Unique'])]
     private ?string $title = null;
 
-    #[Groups(['read:Post:Collection'])]
+    #[Groups(['read:Post:Collection','read:State:Unique'])]
     #[ORM\Column(type: Types::TEXT)]
     private ?string $content = null;
 
@@ -51,11 +51,11 @@ class Post
     #[ORM\JoinColumn(nullable: false)]
     private ?State $state = null;
 
-    #[Groups(['read:Post:Collection'])]
+    #[Groups(['read:Post:Collection','read:State:Unique'])]
     #[ORM\ManyToMany(targetEntity: Tag::class, inversedBy: 'posts')]
     private Collection $tags;
 
-    #[Groups(['read:Post:Collection'])]
+    #[Groups(['read:Post:Collection'],'read:State:Unique')]
     #[ORM\ManyToOne(inversedBy: 'posts')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $userId = null;
@@ -63,7 +63,7 @@ class Post
     #[ORM\Column]
     private ?\DateTimeImmutable $cratedAt = null;
 
-    #[Groups(['read:Post:Collection'])]
+    #[Groups(['read:Post:Collection','read:State:Unique'])]
     #[ORM\Column(length: 255)]
     private ?string $slug = null;
 
