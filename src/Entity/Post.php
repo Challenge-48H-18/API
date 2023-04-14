@@ -18,14 +18,12 @@ use ApiPlatform\Metadata\Put;
 use App\Repository\StateRepository;
 use DateTime;
 use DateTimeImmutable;
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Event\LifecycleEventArgs as EventLifecycleEventArgs;
-use Doctrine\Persistence\Event\LifecycleEventArgs;
+
 
 #[GetCollection(
     normalizationContext: ['groups'=>['read:Post:Collection']],
 )]
+#[ApiResource(paginationEnabled: false)]
 #[Get(normalizationContext:['groups'=>['read:Post:Unique','read:Post:Collection']])]
 #[Put()]
 #[Delete()]
