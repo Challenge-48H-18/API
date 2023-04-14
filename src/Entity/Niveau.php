@@ -17,7 +17,7 @@ use ApiPlatform\Metadata\Put;
 #[GetCollection(
     normalizationContext: ['groups'=>['read:Niveau:Collection']],
 )]
-#[Get(normalizationContext:['groupes'=>['read:Niveau:Unique',"read:Niveau:Collection"]])]
+#[Get(normalizationContext:['groups'=>['read:Niveau:Unique',"read:Niveau:Collection"]])]
 #[ORM\Entity(repositoryClass: NiveauRepository::class)]
 class Niveau
 {

@@ -20,7 +20,7 @@ use DateTime;
 #[GetCollection(
     normalizationContext: ['groups'=>['read:Post:Collection']],
 )]
-#[Get(normalizationContext:['groupes'=>['read:Post:Unique',"read:Post:Collection"]])]
+#[Get(normalizationContext:['groups'=>['read:Post:Unique','read:Post:Collection']])]
 #[Put()]
 #[Delete()]
 #[PostMeta()]

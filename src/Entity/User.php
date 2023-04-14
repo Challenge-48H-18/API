@@ -20,7 +20,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[GetCollection(
     normalizationContext: ['groups'=>['read:User:Collection']],
 )]
-#[Get(normalizationContext:['groupes'=>['read:User:Unique',"read:User:Collection"]])]
+#[Get(normalizationContext:['groups'=>['read:User:Unique',"read:User:Collection"]])]
 #[Put()]
 #[Delete()]
 #[PostMeta()]
@@ -32,7 +32,7 @@ class User
     #[Groups(['read:User:Collection','read:Post:Collection'])]
     private ?int $id = null;
 
-    #[ApiProperty(identifier: true)]
+
     #[ORM\Column(length: 255)]
     #[Groups(['read:User:Collection','read:Post:Collection'])]
     private ?string $name = null;

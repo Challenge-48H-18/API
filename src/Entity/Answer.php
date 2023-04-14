@@ -14,20 +14,24 @@ class Answer
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['read:Post:Unique'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'answers')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Post $post = null;
 
+    #[Groups(['read:Post:Unique'])]
     #[ORM\Column(type: Types::TEXT)]
     private ?string $content = null;
 
     #[ORM\Column]
+    #[Groups(['read:Post:Unique'])]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'answers')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['read:Post:Unique'])]
     private ?User $userID = null;
 
     public function getId(): ?int

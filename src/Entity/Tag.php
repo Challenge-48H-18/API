@@ -18,7 +18,7 @@ use ApiPlatform\Metadata\Put;
 #[GetCollection(
     normalizationContext: ['groups'=>['read:Tag:Collection']],
 )]
-#[Get(normalizationContext:['groupes'=>['read:Tag:Unique',"read:Tag:Collection"]])]
+#[Get(normalizationContext:['groups'=>['read:Tag:Unique',"read:Tag:Collection"]])]
 #[ORM\Entity(repositoryClass: TagRepository::class)]
 class Tag
 {
