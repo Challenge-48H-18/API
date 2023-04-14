@@ -22,8 +22,9 @@ use DateTimeImmutable;
 
 #[GetCollection(
     normalizationContext: ['groups'=>['read:Post:Collection']],
-    paginationEnabled:false
-)]
+    paginationEnabled:false,
+    order: ['id' => 'DESC']
+    )]
 #[Get(
     normalizationContext:['groups'=>['read:Post:Unique','read:Post:Collection']])]
 #[Put()]
@@ -46,7 +47,7 @@ class Post
     #[ORM\Column(type: Types::TEXT)]
     private ?string $content = null;
 
-    #[Groups(['read:Post:Collection'])]
+    #[Groups(['read:Post:Collection','read:State:Unique'])]
     #[ORM\ManyToOne(inversedBy: 'posts')]
     #[ORM\JoinColumn(nullable: false)]
     private ?State $state = null;
@@ -55,12 +56,13 @@ class Post
     #[ORM\ManyToMany(targetEntity: Tag::class, inversedBy: 'posts')]
     private Collection $tags;
 
-    #[Groups(['read:Post:Collection'],'read:State:Unique')]
+    #[Groups(['read:Post:Collection','read:State:Unique'])]
     #[ORM\ManyToOne(inversedBy: 'posts')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $userId = null;
 
     #[ORM\Column]
+    #[Groups(['read:Post:Collection','read:State:Unique'])]
     private ?\DateTimeImmutable $cratedAt = null;
 
     #[Groups(['read:Post:Collection','read:State:Unique'])]

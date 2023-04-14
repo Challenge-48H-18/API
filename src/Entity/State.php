@@ -19,7 +19,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[GetCollection(
     normalizationContext: ['groups'=>['read:State:Collection']],
 )]
-#[Get(normalizationContext:['groups'=>['read:State:Unique',"read:State:Collection"]])]
+#[Get(normalizationContext:['groups'=>['read:State:Unique',"read:State:Collection"]],
+order:['posts.cratedAt'])]
 class State
 {
     #[ORM\Id]
